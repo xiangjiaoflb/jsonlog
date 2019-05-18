@@ -20,11 +20,6 @@ type writer struct {
 	minLogLevel zerolog.Level
 }
 
-const (
-	//LogLevel 日志级别
-	LogLevel = "loglevel"
-)
-
 func (pointer *writer) Write(p []byte) (n int, err error) {
 	//错误在zerolog中有打印
 	return pointer.run.Write(p)
