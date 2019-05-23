@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/rs/zerolog"
 )
@@ -23,7 +24,7 @@ func sendJSON(flog *zerolog.Event, w http.ResponseWriter, err error, data interf
 	var hr httpReturn
 	if status == 0 {
 		if err != nil {
-			hr.Status = 500
+			hr.Status = 400
 			hr.Msg = err.Error()
 		} else {
 			hr.Status = 200
@@ -31,7 +32,9 @@ func sendJSON(flog *zerolog.Event, w http.ResponseWriter, err error, data interf
 		}
 	} else {
 		hr.Status = status
-		hr.Msg = err.Error()
+		if err != nil {
+			hr.Msg = err.Error()
+		}
 	}
 	hr.Data = data
 	buf, err := json.Marshal(hr)
@@ -88,6 +91,8 @@ func requestLog(r *http.Request, flog *zerolog.Event) []byte {
 				flog.Str("Marshalerror", err.Error())
 			}
 			flog.RawJSON("Request", bodybuf)
+		} else {
+			flog.Str("Request", strings.Replace(string(bodybuf), "\n", "换行符", -1))
 		}
 	}
 	return bodybuf
