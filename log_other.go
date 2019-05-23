@@ -10,9 +10,9 @@ import (
 
 //回复客户端的json
 type httpReturn struct {
-	Status int
-	Msg    string
-	Data   interface{}
+	Status int         `json:"status"`
+	Msg    string      `json:"msg"`
+	Data   interface{} `json:"data"`
 }
 
 //sendJSON 发送json数据给前端
